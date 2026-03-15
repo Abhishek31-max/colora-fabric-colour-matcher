@@ -19,10 +19,10 @@ const Sidebar: React.FC = () => {
   useEffect(() => {
     const timer = setTimeout(() => {
       if (loading) {
-        setError("Request timed out. Please check your connection.");
+        setError("Request timed out. Note: DB connections may take longer on first load. Ensure your IP (0.0.0.0/0) is whitelisted in MongoDB Atlas.");
         setLoading(false);
       }
-    }, 10000);
+    }, 30000);
 
     fetch('/api/fabrics')
       .then(res => {
