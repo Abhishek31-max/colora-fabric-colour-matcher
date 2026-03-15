@@ -25,9 +25,9 @@ const Header: React.FC = () => {
       </div>
       
       <nav style={{ display: 'flex', gap: '2rem' }}>
-        <a href="#" style={{ color: 'var(--text-primary)', textDecoration: 'none', fontWeight: 500 }}>Boutique</a>
-        <a href="#" style={{ color: 'var(--text-secondary)', textDecoration: 'none', fontWeight: 500 }}>Collections</a>
-        <a href="#" style={{ color: 'var(--text-secondary)', textDecoration: 'none', fontWeight: 500 }}>About</a>
+        <a href="#boutique" style={{ color: 'var(--text-primary)', textDecoration: 'none', fontWeight: 500 }}>Boutique</a>
+        <a href="#collections" style={{ color: 'var(--text-secondary)', textDecoration: 'none', fontWeight: 500 }}>Collections</a>
+        <a href="#about" style={{ color: 'var(--text-secondary)', textDecoration: 'none', fontWeight: 500 }}>About</a>
       </nav>
     </header>
   );
