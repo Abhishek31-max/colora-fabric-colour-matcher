@@ -8,8 +8,10 @@ export async function GET() {
   try {
     await dbConnect();
     const fabrics = await Fabric.find({}).sort({ createdAt: -1 }).limit(10);
+    console.log(`API: Successfully fetched ${fabrics.length} fabrics.`);
     return NextResponse.json(fabrics);
   } catch (error: any) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    console.error('API Error (fabrics):', error);
+    return NextResponse.json({ error: 'Internal Server Error', details: error.message }, { status: 500 });
   }
 }
