@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Header from '@/components/Header';
 import Sidebar from '@/components/Sidebar';
 import UploadSection from '@/components/UploadSection';
@@ -13,7 +13,7 @@ export default function Home() {
   const [isMatching, setIsMatching] = useState(false);
   const [hasMatched, setHasMatched] = useState(false);
 
-  React.useEffect(() => {
+  useEffect(() => {
     setMounted(true);
   }, []);
 
@@ -77,15 +77,13 @@ export default function Home() {
               animate={{ opacity: 1, y: 0 }}
               style={{ textAlign: 'center', marginBottom: '3rem' }}
             >
-              <h1 style={{ fontSize: '2.5rem', marginBottom: '1rem' }}>Find Your Perfect Fabric</h1>
+              <h1 style={{ fontSize: '2.5rem', marginBottom: '1rem' }}>The Boutique</h1>
               <p style={{ color: 'var(--text-secondary)', fontSize: '1.1rem', maxWidth: '600px', margin: '0 auto' }}>
-                Upload a sample photo or fabric image to discover the closest matches from our premium catalog.
+                Analyze your fabric samples with our AI engine and find the closest match in our premium inventory.
               </p>
             </motion.div>
 
-            <section id="boutique" style={{ scrollMarginTop: '100px' }}>
-              <UploadSection onMatch={handleMatch} isMatching={isMatching} />
-            </section>
+            <UploadSection onMatch={handleMatch} isMatching={isMatching} />
 
             <AnimatePresence>
               {hasMatched && (
@@ -120,34 +118,13 @@ export default function Home() {
                       ))}
                     </div>
                   ) : (
-                    <div className="card" style={{ padding: '4rem', textAlign: 'center', backgroundColor: 'var(--bg-secondary)' }}>
+                    <div className="card glass" style={{ padding: '4rem', textAlign: 'center' }}>
                       <p style={{ color: 'var(--text-secondary)' }}>No close matches found. Try a different sample or color.</p>
                     </div>
                   )}
                 </motion.div>
               )}
             </AnimatePresence>
-            <section id="collections" style={{ marginTop: '6rem', scrollMarginTop: '100px' }}>
-              <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
-                <h2 style={{ fontSize: '2rem', marginBottom: '1rem' }}>Our Collections</h2>
-                <p style={{ color: 'var(--text-secondary)' }}>Explore curated fabrics for every occasion.</p>
-              </div>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))', gap: '2rem' }}>
-                {['Seasonal Favorites', 'Luxury Silks', 'Sustainable Linens', 'Heritage Cottons'].map((cat, i) => (
-                  <div key={i} className="card glass" style={{ padding: '2rem', textAlign: 'center', cursor: 'pointer' }}>
-                    <h3 style={{ fontSize: '1.25rem', marginBottom: '0.5rem' }}>{cat}</h3>
-                    <p style={{ fontSize: '0.9rem', color: 'var(--text-secondary)' }}>View Collection &rarr;</p>
-                  </div>
-                ))}
-              </div>
-            </section>
-
-            <section id="about" style={{ marginTop: '6rem', marginBottom: '6rem', scrollMarginTop: '100px', padding: '4rem', backgroundColor: 'var(--bg-secondary)', borderRadius: 'var(--radius-lg)', textAlign: 'center' }}>
-              <h2 style={{ fontSize: '2rem', marginBottom: '1.5rem' }}>About Colora</h2>
-              <p style={{ color: 'var(--text-secondary)', maxWidth: '800px', margin: '0 auto', fontSize: '1.1rem' }}>
-                At Colora, we combine artisanal quality with modern technology. Our AI-driven match engine ensures you find the perfect fabric for your vision, while our commitment to quality guarantees a premium result every time.
-              </p>
-            </section>
           </div>
         </main>
       </div>
@@ -158,7 +135,8 @@ export default function Home() {
         backgroundColor: 'var(--white)', 
         borderTop: '1px solid var(--bg-secondary)',
         fontSize: '0.9rem',
-        color: 'var(--text-secondary)'
+        color: 'var(--text-secondary)',
+        marginTop: 'auto'
       }}>
         &copy; 2026 Colora – Premium Fabric Matcher. All rights reserved.
       </footer>
