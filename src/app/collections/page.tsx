@@ -33,11 +33,17 @@ export default function CollectionsPage() {
       <Header />
       <div style={{ display: 'flex', flex: 1 }}>
         <Sidebar />
-        <main style={{ flex: 1, padding: '3rem', backgroundColor: 'var(--bg-primary)' }}>
+        <motion.main 
+          initial={{ opacity: 0, x: 20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.5, ease: 'easeOut' }}
+          style={{ flex: 1, padding: '3rem', backgroundColor: 'var(--bg-primary)' }}
+        >
           <div className="container" style={{ maxWidth: '1000px' }}>
             <motion.div 
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 }}
               style={{ textAlign: 'center', marginBottom: '4rem' }}
             >
               <h1 style={{ fontSize: '3rem', marginBottom: '1rem' }}>Our Collections</h1>
@@ -72,7 +78,7 @@ export default function CollectionsPage() {
               ))}
             </div>
           </div>
-        </main>
+        </motion.main>
       </div>
       <footer style={{ padding: '2rem', textAlign: 'center', borderTop: '1px solid var(--bg-secondary)', backgroundColor: 'var(--white)' }}>
         &copy; 2026 Colora – Premium Fabric Matcher. All rights reserved.

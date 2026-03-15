@@ -10,11 +10,17 @@ export default function AboutPage() {
       <Header />
       <div style={{ display: 'flex', flex: 1 }}>
         <Sidebar />
-        <main style={{ flex: 1, padding: '3rem', backgroundColor: 'var(--bg-primary)' }}>
+        <motion.main 
+          initial={{ opacity: 0, x: 20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.5, ease: 'easeOut' }}
+          style={{ flex: 1, padding: '3rem', backgroundColor: 'var(--bg-primary)' }}
+        >
           <div className="container" style={{ maxWidth: '800px' }}>
             <motion.div 
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 }}
               style={{ textAlign: 'center', marginBottom: '4rem' }}
             >
               <h1 style={{ fontSize: '3.5rem', marginBottom: '1.5rem' }}>Our Story</h1>
@@ -49,7 +55,7 @@ export default function AboutPage() {
               </div>
             </section>
           </div>
-        </main>
+        </motion.main>
       </div>
       <footer style={{ padding: '2rem', textAlign: 'center', borderTop: '1px solid var(--bg-secondary)', backgroundColor: 'var(--white)' }}>
         &copy; 2026 Colora – Premium Fabric Matcher. All rights reserved.

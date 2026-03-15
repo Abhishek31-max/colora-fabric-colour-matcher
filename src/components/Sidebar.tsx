@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState } from 'react';
-import { TrendingUp, Clock, ArrowRight } from 'lucide-react';
+import { TrendingUp, Clock, ArrowRight, Info, Palette } from 'lucide-react';
 import Link from 'next/link';
 
 interface Fabric {
@@ -81,15 +81,43 @@ const Sidebar: React.FC = () => {
             </div>
           ) : (
             trending.slice(0, 3).map(item => (
-              <div key={item._id} className="card glass" style={{ padding: '10px', display: 'flex', gap: '12px', alignItems: 'center', border: 'none' }}>
+              <div 
+                key={item._id} 
+                className="card glass item-card" 
+                style={{ 
+                  padding: '10px', 
+                  display: 'flex', 
+                  gap: '12px', 
+                  alignItems: 'center', 
+                  border: '1px solid transparent',
+                  cursor: 'pointer',
+                  transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
+                }}
+              >
                 <div style={{
                   width: '60px',
                   height: '60px',
                   borderRadius: '10px',
                   overflow: 'hidden',
-                  flexShrink: 0
+                  flexShrink: 0,
+                  boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
+                  backgroundColor: item.hex, // Fallback background
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center'
                 }}>
-                  <img src={item.image_url} alt={item.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                  {item.image_url ? (
+                    <img 
+                      src={item.image_url} 
+                      alt={item.name} 
+                      style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                      onError={(e) => {
+                        (e.target as HTMLImageElement).style.display = 'none';
+                      }}
+                    />
+                  ) : (
+                    <div style={{ width: '100%', height: '100%', backgroundColor: item.hex }} />
+                  )}
                 </div>
                 <div style={{ flex: 1, overflow: 'hidden' }}>
                   <div style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--text-primary)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
@@ -100,6 +128,7 @@ const Sidebar: React.FC = () => {
                     {item.hex.toUpperCase()}
                   </div>
                 </div>
+                <Info size={14} style={{ color: 'var(--text-secondary)', opacity: 0.5 }} />
               </div>
             ))
           )}
@@ -113,27 +142,73 @@ const Sidebar: React.FC = () => {
         </div>
         
         <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-          {!loading && !error && trending.length > 3 && trending.slice(3, 6).map(item => (
-            <div key={item._id} style={{ display: 'flex', gap: '12px', alignItems: 'center', padding: '0.5rem', borderRadius: '8px', transition: 'background 0.2s ease' }} className="hover-target">
-               <div style={{ width: '40px', height: '40px', borderRadius: '12px', backgroundColor: item.hex, flexShrink: 0, boxShadow: 'var(--shadow-sm)' }} />
+          {!loading && !error && trending.length > 3 && trending.slice(3, 7).map(item => (
+            <div 
+              key={item._id} 
+              style={{ 
+                display: 'flex', 
+                gap: '12px', 
+                alignItems: 'center', 
+                padding: '0.75rem', 
+                borderRadius: '12px', 
+                transition: 'all 0.2s ease',
+                cursor: 'pointer'
+              }} 
+              className="new-item-row"
+            >
+               <div style={{ 
+                 width: '44px', 
+                 height: '44px', 
+                 borderRadius: '10px', 
+                 backgroundColor: item.hex, 
+                 flexShrink: 0, 
+                 boxShadow: 'var(--shadow-sm)',
+                 display: 'flex',
+                 alignItems: 'center',
+                 justifyContent: 'center'
+               }}>
+                 {/* Removed hex text from here as it was confusing */}
+               </div>
                <div style={{ flex: 1 }}>
                  <div style={{ fontSize: '0.85rem', fontWeight: 500 }}>{item.name}</div>
                  <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>${item.price}/yd</div>
                </div>
-               <ArrowRight size={14} style={{ color: 'var(--text-secondary)' }} />
+               <ArrowRight size={14} className="arrow-icon" style={{ color: 'var(--text-secondary)', opacity: 0, transition: 'all 0.2s ease' }} />
             </div>
           ))}
           {!loading && !error && trending.length <= 3 && trending.length > 0 && (
-            <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', opacity: 0.7 }}>More items coming soon...</div>
+            <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', opacity: 0.7, padding: '1rem', textAlign: 'center' }}>
+              More items coming soon...
+            </div>
           )}
         </div>
       </div>
 
-      <div style={{ marginTop: '3rem', padding: '1.5rem', backgroundColor: 'var(--accent-primary)', borderRadius: 'var(--radius-md)', color: 'var(--white)' }}>
-        <h4 style={{ marginBottom: '0.5rem', color: 'var(--white)' }}>New Season Out!</h4>
-        <p style={{ fontSize: '0.8rem', opacity: 0.9, marginBottom: '1rem' }}>Check our latest spring collection for your next project.</p>
-        <Link href="/collections" style={{ color: 'var(--white)', textDecoration: 'underline', fontSize: '0.85rem', fontWeight: 500 }}>
-          View Collections
+      <div style={{ 
+        marginTop: '3rem', 
+        padding: '1.5rem', 
+        backgroundColor: 'var(--accent-primary)', 
+        borderRadius: 'var(--radius-md)', 
+        color: 'var(--white)',
+        position: 'relative',
+        overflow: 'hidden'
+      }}>
+        <div style={{ position: 'absolute', top: '-10px', right: '-10px', opacity: 0.1 }}>
+          <Palette size={80} />
+        </div>
+        <h4 style={{ marginBottom: '0.5rem', color: 'var(--white)', position: 'relative' }}>New Season Out!</h4>
+        <p style={{ fontSize: '0.8rem', opacity: 0.9, marginBottom: '1rem', position: 'relative' }}>Check our latest spring collection for your next project.</p>
+        <Link href="/collections" style={{ 
+          color: 'var(--white)', 
+          textDecoration: 'none', 
+          fontSize: '0.85rem', 
+          fontWeight: 600,
+          display: 'flex',
+          alignItems: 'center',
+          gap: '4px',
+          position: 'relative'
+        }}>
+          View Collections <ArrowRight size={14} />
         </Link>
       </div>
 
@@ -143,9 +218,17 @@ const Sidebar: React.FC = () => {
           50% { opacity: 0.5; }
           100% { opacity: 1; }
         }
-        .hover-target:hover {
+        .item-card:hover {
+          transform: translateY(-2px);
+          border-color: var(--accent-primary) !important;
+          box-shadow: var(--shadow-md) !important;
+        }
+        .new-item-row:hover {
           background: rgba(0,0,0,0.03);
-          cursor: pointer;
+        }
+        .new-item-row:hover .arrow-icon {
+          opacity: 1 !important;
+          transform: translateX(4px);
         }
       `}</style>
     </aside>

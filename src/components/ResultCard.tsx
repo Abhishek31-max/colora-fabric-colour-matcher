@@ -1,7 +1,7 @@
 "use client";
 import React from 'react';
 import { motion } from 'framer-motion';
-import { ShoppingBag, CheckCircle, AlertCircle } from 'lucide-react';
+import { ShoppingBag, CheckCircle, AlertCircle, Palette } from 'lucide-react';
 
 interface ResultCardProps {
   fabric: {
@@ -31,12 +31,27 @@ const ResultCard: React.FC<ResultCardProps> = ({ fabric, index }) => {
       className="card"
       style={{ overflow: 'hidden', display: 'flex', flexDirection: 'column' }}
     >
-      <div style={{ position: 'relative', height: '200px', overflow: 'hidden' }}>
-        <img 
-          src={fabric.image_url || 'https://via.placeholder.com/400'} 
-          alt={fabric.name || 'Fabric'} 
-          style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
-        />
+      <div style={{ 
+        position: 'relative', 
+        height: '200px', 
+        overflow: 'hidden',
+        backgroundColor: fabric.hex || '#eee',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center'
+      }}>
+        {fabric.image_url ? (
+          <img 
+            src={fabric.image_url} 
+            alt={fabric.name || 'Fabric'} 
+            style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+            onError={(e) => {
+              (e.target as HTMLImageElement).style.display = 'none';
+            }}
+          />
+        ) : (
+          <Palette size={48} style={{ opacity: 0.1 }} />
+        )}
         <div style={{
           position: 'absolute',
           top: '12px',

@@ -70,11 +70,17 @@ export default function Home() {
       <div style={{ display: 'flex', flex: 1 }}>
         <Sidebar />
         
-        <main style={{ flex: 1, padding: '3rem', backgroundColor: 'var(--bg-primary)', overflowY: 'auto' }}>
+        <motion.main 
+          initial={{ opacity: 0, x: 20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.5, ease: 'easeOut' }}
+          style={{ flex: 1, padding: '3rem', backgroundColor: 'var(--bg-primary)', overflowY: 'auto' }}
+        >
           <div className="container" style={{ maxWidth: '1050px' }}>
             <motion.div 
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 }}
               style={{ textAlign: 'center', marginBottom: '3rem' }}
             >
               <h1 style={{ fontSize: '2.5rem', marginBottom: '1rem' }}>The Boutique</h1>
@@ -126,7 +132,7 @@ export default function Home() {
               )}
             </AnimatePresence>
           </div>
-        </main>
+        </motion.main>
       </div>
 
       <footer style={{ 

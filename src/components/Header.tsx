@@ -1,8 +1,18 @@
+"use client";
 import Link from 'next/link';
 import React from 'react';
 import { Palette } from 'lucide-react';
+import { usePathname } from 'next/navigation';
 
 const Header: React.FC = () => {
+  const pathname = usePathname();
+
+  const navLinks = [
+    { name: 'Boutique', href: '/' },
+    { name: 'Collections', href: '/collections' },
+    { name: 'About', href: '/about' },
+  ];
+
   return (
     <header style={{
       padding: '1.5rem 2rem',
@@ -29,16 +39,42 @@ const Header: React.FC = () => {
       </Link>
       
       <nav style={{ display: 'flex', gap: '2rem' }}>
-        <Link href="/" style={{ color: 'var(--text-primary)', textDecoration: 'none', fontWeight: 500 }}>
-          Boutique
-        </Link>
-        <Link href="/collections" style={{ color: 'var(--text-secondary)', textDecoration: 'none', fontWeight: 500 }}>
-          Collections
-        </Link>
-        <Link href="/about" style={{ color: 'var(--text-secondary)', textDecoration: 'none', fontWeight: 500 }}>
-          About
-        </Link>
+        {navLinks.map((link) => {
+          const isActive = pathname === link.href;
+          return (
+            <Link 
+              key={link.name} 
+              href={link.href} 
+              style={{ 
+                color: isActive ? 'var(--accent-primary)' : 'var(--text-secondary)', 
+                textDecoration: 'none', 
+                fontWeight: isActive ? 600 : 500,
+                transition: 'color 0.2s ease',
+                position: 'relative'
+              }}
+              className="nav-link"
+            >
+              {link.name}
+              {isActive && (
+                <span style={{
+                  position: 'absolute',
+                  bottom: '-4px',
+                  left: 0,
+                  width: '100%',
+                  height: '2px',
+                  backgroundColor: 'var(--accent-primary)',
+                  borderRadius: '2px'
+                }} />
+              )}
+            </Link>
+          );
+        })}
       </nav>
+      <style jsx>{`
+        .nav-link:hover {
+          color: var(--accent-primary) !important;
+        }
+      `}</style>
     </header>
   );
 };
