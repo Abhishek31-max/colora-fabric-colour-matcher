@@ -8,9 +8,25 @@ import confetti from 'canvas-confetti';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export default function Home() {
+  const [mounted, setMounted] = React.useState(false);
   const [matches, setMatches] = useState<any[]>([]);
   const [isMatching, setIsMatching] = useState(false);
   const [hasMatched, setHasMatched] = useState(false);
+
+  React.useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) {
+    return (
+      <div style={{ minHeight: '100vh', backgroundColor: 'var(--bg-primary)', display: 'flex', flexDirection: 'column' }}>
+        <Header />
+        <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <div className="animate-fade-in" style={{ color: 'var(--accent-primary)', fontWeight: 500 }}>Loading Colora...</div>
+        </div>
+      </div>
+    );
+  }
 
   const handleMatch = async (hex: string) => {
     setIsMatching(true);
@@ -21,17 +37,24 @@ export default function Home() {
         body: JSON.stringify({ hex })
       });
       const data = await response.json();
-      setMatches(data);
+      if (Array.isArray(data)) {
+        setMatches(data);
+      } else {
+        setMatches([]);
+        console.error('Match API returned non-array:', data);
+      }
       setHasMatched(true);
       
       // Trigger success animation if there's a strong match
-      if (data.length > 0 && data[0].matchPercentage > 90) {
-        confetti({
-          particleCount: 100,
-          spread: 70,
-          origin: { y: 0.6 },
-          colors: ['#7d6e5d', '#a69080', '#f7f3ed']
-        });
+      if (Array.isArray(data) && data.length > 0 && data[0].matchPercentage > 90) {
+        if (typeof window !== 'undefined') {
+          confetti({
+            particleCount: 100,
+            spread: 70,
+            origin: { y: 0.6 },
+            colors: ['#7d6e5d', '#a69080', '#f7f3ed']
+          });
+        }
       }
     } catch (err) {
       console.error('Match error:', err);

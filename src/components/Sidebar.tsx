@@ -16,7 +16,13 @@ const Sidebar: React.FC = () => {
   useEffect(() => {
     fetch('/api/fabrics')
       .then(res => res.json())
-      .then(data => setTrending(data))
+      .then(data => {
+        if (Array.isArray(data)) {
+          setTrending(data);
+        } else {
+          console.error('Expected array from API, got:', data);
+        }
+      })
       .catch(err => console.error(err));
   }, []);
 

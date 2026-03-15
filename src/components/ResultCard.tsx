@@ -17,6 +17,12 @@ interface ResultCardProps {
 }
 
 const ResultCard: React.FC<ResultCardProps> = ({ fabric, index }) => {
+  if (!fabric) return null;
+
+  const matchPercentage = typeof fabric.matchPercentage === 'number' ? fabric.matchPercentage : 0;
+  const price = typeof fabric.price === 'number' ? fabric.price : 0;
+  const stock = typeof fabric.stock === 'number' ? fabric.stock : 0;
+
   return (
     <motion.div 
       initial={{ opacity: 0, y: 30 }}
@@ -27,8 +33,8 @@ const ResultCard: React.FC<ResultCardProps> = ({ fabric, index }) => {
     >
       <div style={{ position: 'relative', height: '200px', overflow: 'hidden' }}>
         <img 
-          src={fabric.image_url} 
-          alt={fabric.name} 
+          src={fabric.image_url || 'https://via.placeholder.com/400'} 
+          alt={fabric.name || 'Fabric'} 
           style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
         />
         <div style={{
@@ -44,41 +50,41 @@ const ResultCard: React.FC<ResultCardProps> = ({ fabric, index }) => {
           color: 'var(--accent-primary)',
           boxShadow: 'var(--shadow-sm)'
         }}>
-          {fabric.matchPercentage}% Match
+          {matchPercentage}% Match
         </div>
       </div>
 
       <div style={{ padding: '1.5rem', flex: 1, display: 'flex', flexDirection: 'column' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.5rem' }}>
           <div>
-            <h3 style={{ fontSize: '1.1rem', marginBottom: '0.25rem' }}>{fabric.name}</h3>
+            <h3 style={{ fontSize: '1.1rem', marginBottom: '0.25rem' }}>{fabric.name || 'Unknown Fabric'}</h3>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <div style={{ width: '16px', height: '16px', borderRadius: '50%', backgroundColor: fabric.hex, border: '1px solid rgba(0,0,0,0.1)' }} />
-              <span style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>{fabric.hex}</span>
+              <div style={{ width: '16px', height: '16px', borderRadius: '50%', backgroundColor: fabric.hex || '#ccc', border: '1px solid rgba(0,0,0,0.1)' }} />
+              <span style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>{fabric.hex || '#N/A'}</span>
             </div>
           </div>
-          <div style={{ fontWeight: 600, color: 'var(--accent-primary)' }}>${fabric.price}</div>
+          <div style={{ fontWeight: 600, color: 'var(--accent-primary)' }}>${price}</div>
         </div>
 
         <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginBottom: '1.25rem', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
-          {fabric.description}
+          {fabric.description || 'No description available.'}
         </p>
 
         <div className="progress-container" style={{ marginBottom: '1.5rem' }}>
           <motion.div 
             className="progress-bar" 
             initial={{ width: 0 }}
-            animate={{ width: `${fabric.matchPercentage}%` }}
+            animate={{ width: `${matchPercentage}%` }}
             transition={{ duration: 1, delay: 0.5 + index * 0.1 }}
           />
         </div>
 
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 'auto' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.8rem' }}>
-            {fabric.stock > 0 ? (
+            {stock > 0 ? (
               <>
                 <CheckCircle size={14} color="var(--success)" />
-                <span style={{ color: 'var(--success)', fontWeight: 500 }}>In stock ({fabric.stock})</span>
+                <span style={{ color: 'var(--success)', fontWeight: 500 }}>In stock ({stock})</span>
               </>
             ) : (
               <>
