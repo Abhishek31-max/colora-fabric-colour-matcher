@@ -33,9 +33,13 @@ export default function AboutPage() {
                 boxShadow: 'var(--shadow-lg)'
               }}>
                 <img 
-                  src="https://images.unsplash.com/photo-1558584449-32219468e820?auto=format&fit=crop&w=1200&q=80" 
+                  src="/about-story.png" 
                   alt="Atelier" 
                   style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                  onError={(e) => {
+                    // Fallback to a high-quality Unsplash image if the local one fails for some reason
+                    (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1524230507669-5ff97982bb5e?auto=format&fit=crop&w=1200&q=80';
+                  }}
                 />
               </div>
             </motion.div>

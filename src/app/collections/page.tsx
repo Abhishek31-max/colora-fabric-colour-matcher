@@ -67,6 +67,9 @@ export default function CollectionsPage() {
                       src={col.image} 
                       alt={col.title} 
                       style={{ width: '100%', height: '100%', objectFit: 'cover', transition: 'transform 0.5s ease' }} 
+                      onError={(e) => {
+                        (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1558584449-32219468e820?auto=format&fit=crop&w=600&q=80';
+                      }}
                     />
                   </div>
                   <div style={{ padding: '2rem' }}>
