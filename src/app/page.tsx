@@ -1,65 +1,121 @@
-import Image from "next/image";
+"use client";
+import React, { useState } from 'react';
+import Header from '@/components/Header';
+import Sidebar from '@/components/Sidebar';
+import UploadSection from '@/components/UploadSection';
+import ResultCard from '@/components/ResultCard';
+import confetti from 'canvas-confetti';
+import { motion, AnimatePresence } from 'framer-motion';
 
 export default function Home() {
+  const [matches, setMatches] = useState<any[]>([]);
+  const [isMatching, setIsMatching] = useState(false);
+  const [hasMatched, setHasMatched] = useState(false);
+
+  const handleMatch = async (hex: string) => {
+    setIsMatching(true);
+    try {
+      const response = await fetch('/api/match', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ hex })
+      });
+      const data = await response.json();
+      setMatches(data);
+      setHasMatched(true);
+      
+      // Trigger success animation if there's a strong match
+      if (data.length > 0 && data[0].matchPercentage > 90) {
+        confetti({
+          particleCount: 100,
+          spread: 70,
+          origin: { y: 0.6 },
+          colors: ['#7d6e5d', '#a69080', '#f7f3ed']
+        });
+      }
+    } catch (err) {
+      console.error('Match error:', err);
+    } finally {
+      setIsMatching(false);
+    }
+  };
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
+    <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
+      <Header />
+      
+      <div style={{ display: 'flex', flex: 1 }}>
+        <Sidebar />
+        
+        <main style={{ flex: 1, padding: '3rem', backgroundColor: 'var(--bg-primary)', overflowY: 'auto' }}>
+          <div className="container" style={{ maxWidth: '1050px' }}>
+            <motion.div 
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              style={{ textAlign: 'center', marginBottom: '3rem' }}
             >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
+              <h1 style={{ fontSize: '2.5rem', marginBottom: '1rem' }}>Find Your Perfect Fabric</h1>
+              <p style={{ color: 'var(--text-secondary)', fontSize: '1.1rem', maxWidth: '600px', margin: '0 auto' }}>
+                Upload a sample photo or fabric image to discover the closest matches from our premium catalog.
+              </p>
+            </motion.div>
+
+            <UploadSection onMatch={handleMatch} isMatching={isMatching} />
+
+            <AnimatePresence>
+              {hasMatched && (
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                >
+                  <div style={{ 
+                    display: 'flex', 
+                    alignItems: 'center', 
+                    justifyContent: 'space-between', 
+                    marginBottom: '2rem',
+                    paddingTop: '2rem',
+                    borderTop: '1px solid var(--bg-secondary)'
+                  }}>
+                    <h2 style={{ fontSize: '1.5rem' }}>Match Results</h2>
+                    <span style={{ fontSize: '0.9rem', color: 'var(--text-secondary)' }}>
+                      Found {matches.length} matches
+                    </span>
+                  </div>
+
+                  {matches.length > 0 ? (
+                    <div style={{ 
+                      display: 'grid', 
+                      gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', 
+                      gap: '2rem',
+                      paddingBottom: '4rem'
+                    }}>
+                      {matches.map((match, index) => (
+                        <ResultCard key={match._id} fabric={match} index={index} />
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="card" style={{ padding: '4rem', textAlign: 'center', backgroundColor: 'var(--bg-secondary)' }}>
+                      <p style={{ color: 'var(--text-secondary)' }}>No close matches found. Try a different sample or color.</p>
+                    </div>
+                  )}
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+        </main>
+      </div>
+
+      <footer style={{ 
+        padding: '2rem', 
+        textAlign: 'center', 
+        backgroundColor: 'var(--white)', 
+        borderTop: '1px solid var(--bg-secondary)',
+        fontSize: '0.9rem',
+        color: 'var(--text-secondary)'
+      }}>
+        &copy; 2026 Colora – Premium Fabric Matcher. All rights reserved.
+      </footer>
     </div>
   );
 }

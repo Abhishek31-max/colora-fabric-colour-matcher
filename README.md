@@ -1,36 +1,58 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Colora – Fabric Colour Matcher
+
+A premium, full-stack web application designed to help users find the perfect fabric matches using AI-powered color analysis.
+
+## Features
+- **Intelligent Colour Matching**: Uses CIELAB color space and Delta E (CIE76) formula for perceptual color matching accuracy.
+- **Image Analysis**: Client-side color extraction using Canvas API.
+- **Modern UI**: Minimalistic, professional design with smooth Framer Motion animations.
+- **Real-time Results**: Dynamic match percentage and stock availability display.
+- **Responsive**: Seamless experience on both desktop and mobile devices.
+
+## Tech Stack
+- **Frontend**: Next.js 15+ (App Router), React 19, Framer Motion, Lucide Icons.
+- **Backend**: Next.js API Routes.
+- **Database**: MongoDB Atlas.
+- **Styling**: Vanilla CSS (Tailwind-free for maximum flexibility).
 
 ## Getting Started
 
-First, run the development server:
+### 1. Prerequisites
+- Node.js (Latest LTS)
+- MongoDB Atlas account (or local MongoDB)
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+### 2. Environment Setup
+Create a `.env.local` file in the root directory:
+```env
+MONGODB_URI=your_mongodb_connection_string
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 3. Install Dependencies
+```bash
+npm install
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### 4. Seed Data
+Populate the database with sample fabric items:
+```bash
+node src/scripts/seed.js
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### 5. Run Locally
+```bash
+npm run dev
+```
+Open [http://localhost:3000](http://localhost:3000) to view the application.
 
-## Learn More
+## Deployment on Vercel
+1. Push the code to a GitHub repository.
+2. Link the repository to your Vercel project.
+3. Add the `MONGODB_URI` environment variable in the Vercel Dashboard.
+4. Deploy!
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Testing
+To run the included unit tests:
+```bash
+npm test
+```
+(Note: You may need to set up a test runner like Jest if not already configured in your environment).
