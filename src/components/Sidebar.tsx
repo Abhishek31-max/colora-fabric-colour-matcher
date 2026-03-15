@@ -14,19 +14,38 @@ interface Fabric {
 const Sidebar: React.FC = () => {
   const [trending, setTrending] = useState<Fabric[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    const timer = setTimeout(() => {
+      if (loading) {
+        setError("Request timed out. Please check your connection.");
+        setLoading(false);
+      }
+    }, 10000);
+
     fetch('/api/fabrics')
-      .then(res => res.json())
+      .then(res => {
+        if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+        return res.json();
+      })
       .then(data => {
+        console.log('Sidebar data received:', data);
         if (Array.isArray(data)) {
           setTrending(data);
+        } else if (data && data.error) {
+          setError(data.error);
+        } else {
+          setError("Invalid data format received.");
         }
         setLoading(false);
+        clearTimeout(timer);
       })
       .catch(err => {
-        console.error(err);
+        console.error('Sidebar fetch error:', err);
+        setError("Failed to load trending fabrics.");
         setLoading(false);
+        clearTimeout(timer);
       });
   }, []);
 
@@ -52,6 +71,14 @@ const Sidebar: React.FC = () => {
             [1, 2, 3].map(i => (
               <div key={i} style={{ height: '80px', borderRadius: '12px', backgroundColor: 'rgba(0,0,0,0.05)', animation: 'pulse 1.5s infinite' }} />
             ))
+          ) : error ? (
+            <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', padding: '1rem', textAlign: 'center', backgroundColor: 'rgba(255,0,0,0.03)', borderRadius: '8px' }}>
+              {error}
+            </div>
+          ) : trending.length === 0 ? (
+            <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', padding: '1rem', textAlign: 'center' }}>
+              No trending fabrics found.
+            </div>
           ) : (
             trending.slice(0, 3).map(item => (
               <div key={item._id} className="card glass" style={{ padding: '10px', display: 'flex', gap: '12px', alignItems: 'center', border: 'none' }}>
@@ -86,7 +113,7 @@ const Sidebar: React.FC = () => {
         </div>
         
         <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-          {trending.slice(3, 6).map(item => (
+          {!loading && !error && trending.length > 3 && trending.slice(3, 6).map(item => (
             <div key={item._id} style={{ display: 'flex', gap: '12px', alignItems: 'center', padding: '0.5rem', borderRadius: '8px', transition: 'background 0.2s ease' }} className="hover-target">
                <div style={{ width: '40px', height: '40px', borderRadius: '12px', backgroundColor: item.hex, flexShrink: 0, boxShadow: 'var(--shadow-sm)' }} />
                <div style={{ flex: 1 }}>
@@ -96,6 +123,9 @@ const Sidebar: React.FC = () => {
                <ArrowRight size={14} style={{ color: 'var(--text-secondary)' }} />
             </div>
           ))}
+          {!loading && !error && trending.length <= 3 && trending.length > 0 && (
+            <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', opacity: 0.7 }}>More items coming soon...</div>
+          )}
         </div>
       </div>
 
